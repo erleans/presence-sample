@@ -1,0 +1,24 @@
+{application, presence,
+ [{description, "An Erleans application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { presence_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    pgsql,
+    backoff,
+    erleans,
+    prometheus,
+    elli_prometheus,
+    elli,
+    jsx,
+    elli_date
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.
