@@ -1,6 +1,4 @@
 {
-    "dashboard":
-{
     "__inputs": [
     {
       "name": "DS_PROMETHEUS",
@@ -1053,13 +1051,4 @@
   "timezone": "browser",
   "title": "BEAM",
   "version": 36
-},
-    "inputs": [
-        {
-          "name": "DS_PROMETHEUS",
-          "pluginId": "prometheus",
-          "type": "datasource",
-          "value": "presence-prometheus"
-        }
-      ]
 }
