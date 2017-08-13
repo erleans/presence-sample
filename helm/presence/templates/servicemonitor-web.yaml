@@ -1,0 +1,17 @@
+{{ if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ServiceMonitor
+metadata:
+  name: "{{ .Release.Name }}-service-monitor-web"
+  labels:
+    tier: app
+    release: "{{ .Release.Name }}"
+spec:
+  selector:
+    matchLabels:
+      release: "{{ .Release.Name }}"
+      tier: app
+  endpoints:
+  - port: web
+    interval: 10s
+{{ end }}

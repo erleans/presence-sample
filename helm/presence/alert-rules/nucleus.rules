@@ -1,0 +1,2 @@
+ALERT ExampleAlert
+IF vector(1)

@@ -1,0 +1,16 @@
+{{ if .Values.monitoring.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "presence-prometheus-svc"
+spec:
+  type: NodePort
+  ports:
+  - name: web
+    nodePort: 30101
+    port: 9090
+    protocol: TCP
+    targetPort: web
+  selector:
+    prometheus: "presence-prometheus"
+{{ end }}
