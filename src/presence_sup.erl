@@ -34,7 +34,12 @@ init([]) ->
                  intensity => 5,
                  period => 10},
 
-    ElliOpts = [{callback, presence_elli_callback}, {port, Port}],
+    Config = [{mods, [{elli_prometheus, []},
+                      {presence_elli_callback, []}
+                     ]}
+             ],
+
+    ElliOpts = [{callback, elli_middleware}, {callback_args, Config}, {port, Port}],
     ChildSpecs = [#{id => elli_server,
                     start => {elli, start_link, [ElliOpts]},
                     restart => permanent,

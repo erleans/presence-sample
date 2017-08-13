@@ -15,6 +15,7 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
+    prometheus_registry:register_collector(prometheus_process_collector),
     presence_sup:start_link().
 
 %%--------------------------------------------------------------------

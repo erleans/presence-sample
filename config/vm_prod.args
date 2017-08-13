@@ -1,4 +1,4 @@
--sname presence
+-name presence@${NODE}
 
 -setcookie presence_cookie
 
