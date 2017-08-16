@@ -5,13 +5,12 @@ metadata:
   labels:
     release: "{{ .Release.Name }}"
     app: presence-postgresql
-    #chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   type: {{ .Values.service.type }}
   ports:
   - port: 9187
     targetPort: 9187
     protocol: TCP
-    name: pgmetrics
+    name: metrics
   selector:
     app: presence-postgresql

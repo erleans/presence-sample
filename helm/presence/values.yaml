@@ -8,19 +8,6 @@ service:
   type: ClusterIP
   externalPort: 8080
   internalPort: 8080
-ingress:
-  enabled: false
-  # Used to create Ingress record (should used with service.type: ClusterIP).
-  hosts:
-    - chart-example.local
-  annotations:
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  tls:
-    # Secrets must be manually created in the namespace.
-    # - secretName: chart-example-tls
-    #   hosts:
-    #     - chart-example.local
 resources:
   limits:
     cpu: 100m
@@ -31,7 +18,6 @@ resources:
 
 monitoring:
   enabled: true
-  gfRelease: grafana
 
 postgresql:
   metrics:

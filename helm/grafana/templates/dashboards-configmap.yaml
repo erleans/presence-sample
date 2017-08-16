@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: {{ template "grafana.server.fullname" . }}
   labels:
     app: {{ template "grafana.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
-  name: {{ template "grafana.server.fullname" . }}
 data:
   {{ .Release.Name }}-datasource.json: |
 {{ include "datasource" . | indent 4 }}

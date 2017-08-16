@@ -9,8 +9,8 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: presence-postgresql
+      app: "{{ .Release.Name }}-postgresql"
   endpoints:
-  - port: pgmetrics
+  - port: metrics
     interval: 10s
 {{ end }}

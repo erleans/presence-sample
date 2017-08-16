@@ -5,7 +5,7 @@ metadata:
   labels:
     tier: app
     release: "{{ .Release.Name }}"
-    #chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   type: {{ .Values.service.type }}
   ports:
