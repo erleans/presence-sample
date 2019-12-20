@@ -28,9 +28,9 @@ placement() ->
 init(_GrainRef, State) ->
     {ok, State, #{}}.
 
-handle_call({heartbeat, Blob}, _From, State) ->
+handle_call({heartbeat, Blob}, From, State) ->
     Status = handle_heartbeat(Blob),
-    {reply, Status, State}.
+    {ok, State, [{reply, From, Status}]}.
 
 handle_cast(_, State) ->
     {noreply, State}.
@@ -39,7 +39,7 @@ handle_info(_, State) ->
     {noreply, State}.
 
 deactivate(State) ->
-    {save, State}.
+    {ok, State}.
 
 %%%===================================================================
 %%% Internal functions

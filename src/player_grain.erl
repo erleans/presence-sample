@@ -19,6 +19,7 @@
          handle_info/2,
          deactivate/1]).
 
+-include_lib("kernel/include/logger.hrl").
 -include_lib("erleans/include/erleans.hrl").
 
 -type state() :: #{current_game := erleans:grain_ref() | undefined}.
@@ -45,14 +46,14 @@ provider() ->
 init(_GrainRef, State) ->
     {ok, State, #{}}.
 
-handle_call(get_current_game, _From, State=#{current_game := CurrentGame}) ->
-    {reply, CurrentGame, State};
-handle_call({join_game, GameGrain}, _From, State) ->
-    lager:info("Player ~p joined game ~p", [get(grain_ref), GameGrain]),
-    {reply, ok, State#{current_game => GameGrain}};
-handle_call({leave_game, GameGrain}, _From, State) ->
-    lager:info("Player ~p left game ~p", [get(grain_ref), GameGrain]),
-    {reply, ok, State#{current_game => undefined}}.
+handle_call(get_current_game, From, State=#{current_game := CurrentGame}) ->
+    {ok, State, [{reply, From, CurrentGame}]};
+handle_call({join_game, GameGrain}, From, State) ->
+    ?LOG_INFO("Player ~p joined game ~p", [get(grain_ref), GameGrain]),
+    {ok, State#{current_game => GameGrain}, [{reply, From, ok}, save_state]};
+handle_call({leave_game, GameGrain}, From, State) ->
+    ?LOG_INFO("Player ~p left game ~p", [get(grain_ref), GameGrain]),
+    {ok, State#{current_game => undefined}, [{reply, From, ok}, save_state]}.
 
 handle_cast(_, State) ->
     {noreply, State}.
@@ -61,7 +62,7 @@ handle_info(_, State) ->
     {noreply, State}.
 
 deactivate(State) ->
-    {save, State}.
+    {save_state, State}.
 
 %%%===================================================================
 %%% Internal functions

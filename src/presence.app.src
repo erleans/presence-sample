@@ -9,7 +9,7 @@
     prometheus,
     elli_prometheus,
     prometheus_process_collector,
-    pgsql,
+    erleans_provider_pgo,
     backoff,
     erleans,
     elli,

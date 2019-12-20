@@ -11,12 +11,13 @@
 -export([placement/0,
          provider/0]).
 
--export([init/2,
+-export([state/1,
          handle_call/3,
          handle_cast/2,
          handle_info/2,
          deactivate/1]).
 
+-include_lib("kernel/include/logger.hrl").
 -include_lib("erleans/include/erleans.hrl").
 
 -type state() :: #{status  := #{players := sets:set(),
@@ -32,15 +33,21 @@ placement() ->
 provider() ->
     erleans_config:get(default_provider).
 
--spec init(erleans:grain_ref(), state() | #{}) -> {ok, state(), #{}}.
-init(_GrainRef, State=#{players := _}) ->
-    {ok, State, #{}};
-init(_GrainRef, _) ->
-    {ok, #{status => #{players => sets:new(),
-                       score => ""},
-           players => sets:new()}, #{}}.
+%% -spec init(erleans:grain_ref(), state() | #{}) -> {ok, state(), #{}}.
+%% init(_GrainRef, State=#{players := _}) ->
+%%     {ok, State, #{}};
+%% init(_GrainRef, _) ->
+%%     {ok, #{status => #{players => sets:new(),
+%%                        score => ""},
+%%            players => sets:new()}, #{}}.
 
-handle_call({update_game_status, Status=#{players := PlayersUpdate}}, _From, State=#{players := Players}) ->
+-spec state(state() | #{}) -> state().
+state(_) ->
+    #{status => #{players => sets:new(),
+                  score => ""},
+           players => sets:new()}.
+
+handle_call({update_game_status, Status=#{players := PlayersUpdate}}, From, State=#{players := Players}) ->
     State1 = State#{status => Status},
     PlayersUpdateSet = sets:from_list(PlayersUpdate),
 
@@ -52,7 +59,7 @@ handle_call({update_game_status, Status=#{players := PlayersUpdate}}, _From, Sta
                                    sets:add_element(Player, Acc)
                                catch
                                    C:T ->
-                                       lager:error("failure to join ~p ~p ~p", [C, T]),
+                                       ?LOG_ERROR("failure to join ~p ~p ~p", [C, T]),
                                        Acc
                                end
                            end, Players, sets:to_list(NewPlayers)),
@@ -65,12 +72,12 @@ handle_call({update_game_status, Status=#{players := PlayersUpdate}}, _From, Sta
                                     sets:del_element(Player, Acc)
                                 catch
                                     C:T ->
-                                        lager:error("failure to leave ~p ~p", [C, T]),
+                                        ?LOG_ERROR("failure to leave ~p ~p", [C, T]),
                                         Acc
                                 end
                             end, Players1, sets:to_list(LeftPlayers)),
 
-    {reply, ok, State1#{players => Players2}}.
+    {ok, State1#{players => Players2}, [{reply, From, ok}, save_state]}.
 
 handle_cast(_, State) ->
     {noreply, State}.
@@ -79,7 +86,7 @@ handle_info(_, State) ->
     {noreply, State}.
 
 deactivate(State) ->
-    {save, State}.
+    {save_state, State}.
 
 %%%===================================================================
 %%% Internal functions
