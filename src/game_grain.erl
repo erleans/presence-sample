@@ -33,14 +33,6 @@ placement() ->
 provider() ->
     erleans_config:get(default_provider).
 
-%% -spec init(erleans:grain_ref(), state() | #{}) -> {ok, state(), #{}}.
-%% init(_GrainRef, State=#{players := _}) ->
-%%     {ok, State, #{}};
-%% init(_GrainRef, _) ->
-%%     {ok, #{status => #{players => sets:new(),
-%%                        score => ""},
-%%            players => sets:new()}, #{}}.
-
 -spec state(state() | #{}) -> state().
 state(_) ->
     #{status => #{players => sets:new(),
