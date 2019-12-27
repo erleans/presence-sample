@@ -1,9 +1,11 @@
-presence
-=====
+# Presence Erleans Example
 
-This is a project for use as an example in blog posts, [Installing and Monitoring Erlang Releases on Kubernetes](https://spacetimeinsight.com/installing-monitoring-erlang-releases-kubernetes-helm-prometheus/) and [Building Erlang Docker Images with Multi-Stage Builds](https://spacetimeinsight.com/building-erlang-docker-images-multi-stage-builds/).
+## Run in Kubernetes
 
-Build
------
+The simplest way to get started with Kubernetes locally is to use something like [microk8s](https://microk8s.io/).
 
-    $ rebar3 compile
+With `microk8s` running and the `dns` and `registry` enabled use [Tilt](https://tilt.dev/) to boot up the project. The Kubernetes resources are generated from kustomize configs under `deployment/`:
+
+``` shell
+$ tilt up
+```
