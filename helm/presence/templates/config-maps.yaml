@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: "{{ .Release.Name }}-presence-config"
-data:
-  presence.discovery_domain: "{{ .Release.Name }}-{{ .Values.service.name }}.{{ .Release.Namespace }}.svc.cluster.local"
-  presence.postgres_host: "{{ .Release.Name }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local"

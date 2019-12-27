@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    service: flyway
+  name: flyway
+spec:
+  # alpha feature still as of 1.16
+  # deletes the job after it completes
+  ttlSecondsAfterFinished: 0
+  template:
+    metadata:
+      labels:
+        service: flyway
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+      - name: migrations
+        emptyDir:
+          medium: Memory
+
+      containers:
+      - args:
+        - "-url=jdbc:postgresql://$(POSTGRES_SERVICE):5432/presence"
+        - -user=presence
+        - -password=password
+        - -connectRetries=60
+        - migrate
+        image: flyway/flyway:6-alpine
+        name: flyway
+        volumeMounts:
+        - name: migrations
+          mountPath: /flyway/sql
+
+      initContainers:
+      - name: presence-sql
+        image: presence
+        command: ["/bin/sh"]
+        args: ["-c", "cp /opt/presence/sql/* /flyway/sql"]
+        volumeMounts:
+          - name: migrations
+            mountPath: /flyway/sql

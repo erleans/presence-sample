@@ -28,18 +28,16 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    Port = application:get_env(presence, port, 8080),
+    Port = application:get_env(presence, port, 3000),
 
     SupFlags = #{strategy => one_for_one,
                  intensity => 5,
                  period => 10},
 
-    Config = [{mods, [{elli_prometheus, []},
-                      {presence_elli_callback, []}
-                     ]}
-             ],
-
-    ElliOpts = [{callback, elli_middleware}, {callback_args, Config}, {port, Port}],
+    MiddlewareArgs = [{mods, [{presence_elli_callback, []}]}],
+    ElliOpts = [{callback, elli_middleware},
+                {callback_args, MiddlewareArgs},
+                {port, Port}],
     ChildSpecs = [#{id => elli_server,
                     start => {elli, start_link, [ElliOpts]},
                     restart => permanent,

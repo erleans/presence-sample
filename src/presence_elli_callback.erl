@@ -15,7 +15,8 @@ handle('POST', [<<"heartbeat">>], Req) ->
     Body = elli_request:body(Req),
     presence_grain:heartbeat(Body),
     {ok, [], <<>>};
-
+handle(_, [<<"healthz">>], _Req) ->
+    {200, [], <<>>};
 handle(_, _, _Req) ->
     {404, [], <<"Not Found">>}.
 

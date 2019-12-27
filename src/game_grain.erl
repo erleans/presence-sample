@@ -18,7 +18,6 @@
          deactivate/1]).
 
 -include_lib("kernel/include/logger.hrl").
--include_lib("erleans/include/erleans.hrl").
 
 -type state() :: #{status  := #{players := sets:set(),
                                 score   := string()},

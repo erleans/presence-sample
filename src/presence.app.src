@@ -2,24 +2,20 @@
  [{description, "An Erleans application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { presence_app, []}},
+  {mod, {presence_app, []}},
   {applications,
    [kernel,
     stdlib,
-    prometheus,
-    elli_prometheus,
-    prometheus_process_collector,
     erleans_provider_pgo,
     backoff,
     erleans,
     elli,
-    jsx,
+    jsone,
     elli_date
    ]},
   {env,[]},
   {modules, []},
 
-  {maintainers, []},
   {licenses, ["Apache 2.0"]},
   {links, []}
  ]}.

@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: presence
+spec:
+  replicas: 1
+  template:
+    spec:
+      shareProcessNamespace: true
+      volumes:
+      - name: migrations
+        emptyDir:
+          medium: Memory
+      # initContainers:
+      # - args:
+      #   - "-url=jdbc:postgresql://$(POSTGRES_SERVICE):5432/presence"
+      #   - -user=presence
+      #   - -password=password
+      #   - -connectRetries=60
+      #   - validate
+      #   image: boxfuse/flyway:5.2.4
+      #   name: flyway-validate
+      #   volumeMounts:
+      #   - name: migrations
+      #     mountPath: /flyway/sql
+
+      # - name: presence-sql
+      #   image: presence
+      #   volumeMounts:
+      #     - name: migrations
+      #       mountPath: /flyway/sql
+      #   command: ["/bin/sh"]
+      #   args: ["-c", "cp /app/sql/* /flyway/sql"]
+
+      containers:
+      - name: presence
+        image: presence
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+          name: http
+
+        env:
+        - name: DB_HOST
+          value: $(POSTGRES_SERVICE)
+        - name: NODE
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: SCHEDULERS
+          valueFrom:
+            resourceFieldRef:
+              containerName: presence
+              resource: limits.cpu
+              divisor: 1
+        envFrom:
+        - configMapRef:
+            name: configmap
+
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 1
+          periodSeconds: 5
+
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 10
+      

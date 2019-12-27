@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: presence-dev
+nameSuffix: -dev
+commonLabels:
+  overlay: dev
+bases:
+- ../../base
+- ../../postgres
+images:
+- name: presence
+  newName: presence
+  newTag: master
+patchesStrategicMerge:
+- flyway_job_patch.yaml
+configMapGenerator:
+- env: dev.env
+  name: configmap
